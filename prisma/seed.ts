@@ -1,13 +1,19 @@
+import { configureDatabase } from '../server/database-config';
 import 'dotenv/config';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
+configureDatabase();
 const db=new PrismaClient();
 async function main(){
  const password=process.env.SEED_PASSWORD;
  if(!password||password.length<12)throw new Error('Set SEED_PASSWORD to a password of at least 12 characters');
  const passwordHash=await bcrypt.hash(password,12);
- const staff=[['admin','Dr. Meera Sharma','admin@campus.edu','ADMIN'],['accountant','Rajesh Kumar','accounts@campus.edu','ACCOUNTANT'],['faculty-1','Dr. Ananya Rao','ananya@campus.edu','FACULTY'],['faculty-2','Prof. Vikram Singh','vikram@campus.edu','FACULTY']] as const;
- for(const [id,name,email,role] of staff)await db.user.upsert({where:{id},update:{},create:{id,name,email,role,passwordHash}});
+ const adminEmail=(process.env.ADMIN_EMAIL||'admin@campus.edu').toLowerCase();
+ const adminName=process.env.ADMIN_NAME||'Dr. Meera Sharma';
+ if(process.env.ADMIN_PASSWORD && process.env.ADMIN_PASSWORD.length<12)throw new Error('ADMIN_PASSWORD must contain at least 12 characters');
+ const adminHash=process.env.ADMIN_PASSWORD?await bcrypt.hash(process.env.ADMIN_PASSWORD,12):passwordHash;
+ const staff=[['admin',adminName,adminEmail,'ADMIN'],['accountant','Rajesh Kumar','accounts@campus.edu','ACCOUNTANT'],['faculty-1','Dr. Ananya Rao','ananya@campus.edu','FACULTY'],['faculty-2','Prof. Vikram Singh','vikram@campus.edu','FACULTY']] as const;
+ for(const [id,name,email,role] of staff)await db.user.upsert({where:{id},update:{},create:{id,name,email,role,passwordHash:role==='ADMIN'?adminHash:passwordHash}});
  const departments=[['dept-cse','Computer Science','CSE','course-cse','B.Tech Computer Science'],['dept-commerce','Commerce','COM','course-commerce','B.Com Accounting'],['dept-business','Business Administration','BBA','course-business','BBA Management']] as const;
  for(const [id,name,code,courseId,courseName] of departments){
  await db.department.upsert({where:{id},update:{},create:{id,name,code}});
@@ -28,6 +34,6 @@ async function main(){
  for(let day=1;day<=6;day++)for(let i=0;i<subjects.length;i++){
  const s=subjects[i];await db.timetable.upsert({where:{id:`slot-${day}-${i}`},update:{},create:{id:`slot-${day}-${i}`,courseId:s[3],semester:3,subjectId:s[0],facultyId:i%2?'faculty-2':'faculty-1',day,startTime:`${String(9+i).padStart(2,'0')}:00`,endTime:`${String(10+i).padStart(2,'0')}:00`,room:`${201+i}`}});
  }
- console.log('Seed complete: admin@campus.edu, accounts@campus.edu, ananya@campus.edu, vikram@campus.edu, student1@campus.edu … student10@campus.edu. Password: configured SEED_PASSWORD. Existing records preserved.');
+ console.log(`Seed complete: ${adminEmail}, accounts@campus.edu, ananya@campus.edu, vikram@campus.edu, student1@campus.edu … student10@campus.edu. Initial admin uses ADMIN_PASSWORD when configured; sample staff/students use SEED_PASSWORD. Existing records preserved.`);
 }
 main().catch(e=>{console.error(e);process.exitCode=1;}).finally(()=>db.$disconnect());

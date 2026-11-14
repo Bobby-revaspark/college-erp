@@ -1,7 +1,9 @@
+import { configureDatabase } from '../server/database-config';
 import 'dotenv/config';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
+configureDatabase();
 const db = new PrismaClient();
 async function main() {
  const config = z.object({

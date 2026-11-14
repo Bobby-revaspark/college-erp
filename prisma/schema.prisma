@@ -33,6 +33,7 @@ model User {
   lectures Timetable[]
   sessions Session[]
   payments FeeTransaction[]
+  reviewedPaymentRequests StudentPaymentRequest[]
   createdAt DateTime @default(now())
 }
 model Session {
@@ -85,6 +86,7 @@ model Student {
   totalFee Decimal @db.Decimal(12,2)
   transactions FeeTransaction[]
   attendance Attendance[]
+  paymentRequests StudentPaymentRequest[]
   @@index([courseId,semester])
 }
 model FeeStructure {
@@ -101,6 +103,8 @@ model FeeStructure {
 model FeeTransaction {
   id String @id @default(cuid())
   receiptNumber String @unique
+  requestId String? @unique
+  balanceAfter Decimal? @db.Decimal(12,2)
   studentId String
   student Student @relation(fields:[studentId], references:[id])
   amount Decimal @db.Decimal(12,2)
@@ -110,6 +114,7 @@ model FeeTransaction {
   recordedById String
   recordedBy User @relation(fields:[recordedById], references:[id])
   createdAt DateTime @default(now())
+  paymentRequest StudentPaymentRequest?
   @@index([date])
 }
 model Subject {
@@ -146,4 +151,51 @@ model Timetable {
   endTime String
   room String
   @@index([day,facultyId])
+}
+
+model Institution {
+  id String @id @default("college")
+  name String
+  address String @db.Text
+  email String
+  phone String
+  website String
+  logoUrl String @db.MediumText
+  academicYear String
+  receiptNote String @db.Text
+  paymentUpiId String @default("") @db.VarChar(320)
+  paymentBankDetails String @default("") @db.VarChar(2000)
+  paymentInstructions String @default("") @db.VarChar(1000)
+  paymentQrUrl String? @db.MediumText
+  updatedAt DateTime @updatedAt
+}
+
+enum PaymentRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+model StudentPaymentRequest {
+  id String @id @default(cuid())
+  requestId String @unique
+  studentId String
+  student Student @relation(fields:[studentId], references:[id])
+  amount Decimal @db.Decimal(12,2)
+  mode PaymentMode
+  transactionId String @unique
+  date DateTime
+  studentNote String @db.VarChar(500)
+  proof String? @db.MediumText
+  hasProof Boolean @default(false)
+  status PaymentRequestStatus @default(PENDING)
+  reviewerId String?
+  reviewer User? @relation(fields:[reviewerId],references:[id])
+  reviewNote String @default("") @db.VarChar(500)
+  reviewedAt DateTime?
+  receiptId String? @unique
+  receipt FeeTransaction? @relation(fields:[receiptId],references:[id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([studentId,status])
+  @@index([status,createdAt])
 }

@@ -8,14 +8,16 @@
     "build": "tsc --noEmit && vite build",
     "start": "NODE_ENV=production tsx server/index.ts",
     "db:generate": "prisma generate",
-    "db:push": "prisma db push",
+    "db:push": "node --import tsx scripts/database-command.ts db push",
     "db:seed": "tsx prisma/seed.ts",
     "test": "tsx --test tests/*.test.ts",
     "test:integration": "tsx tests/api.integration.ts",
-    "db:migrate": "prisma migrate deploy",
+    "db:migrate": "node --import tsx scripts/database-command.ts migrate deploy",
     "db:admin": "tsx prisma/admin.ts",
     "vercel-build": "node scripts/vercel-build.mjs",
-    "build:static": "node scripts/build-static.mjs"
+    "build:static": "node scripts/build-static.mjs",
+    "db:check": "node --import tsx scripts/check-database.ts",
+    "test:student-payments": "node --import tsx tests/student-payments.integration.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

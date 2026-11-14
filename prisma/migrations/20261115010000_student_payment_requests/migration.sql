@@ -1,0 +1,33 @@
+ALTER TABLE `Institution`
+  ADD COLUMN `paymentUpiId` VARCHAR(320) NOT NULL DEFAULT '',
+  ADD COLUMN `paymentBankDetails` VARCHAR(2000) NOT NULL DEFAULT '',
+  ADD COLUMN `paymentInstructions` VARCHAR(1000) NOT NULL DEFAULT '',
+  ADD COLUMN `paymentQrUrl` MEDIUMTEXT NULL;
+CREATE TABLE `StudentPaymentRequest` (
+  `id` VARCHAR(191) NOT NULL,
+  `requestId` VARCHAR(191) NOT NULL,
+  `studentId` VARCHAR(191) NOT NULL,
+  `amount` DECIMAL(12,2) NOT NULL,
+  `mode` ENUM('CASH','UPI','BANK_TRANSFER','CARD') NOT NULL,
+  `transactionId` VARCHAR(191) NOT NULL,
+  `date` DATETIME(3) NOT NULL,
+  `studentNote` VARCHAR(500) NOT NULL,
+  `proof` MEDIUMTEXT NULL,
+  `hasProof` BOOLEAN NOT NULL DEFAULT false,
+  `status` ENUM('PENDING','APPROVED','REJECTED') NOT NULL DEFAULT 'PENDING',
+  `reviewerId` VARCHAR(191) NULL,
+  `reviewNote` VARCHAR(500) NOT NULL DEFAULT '',
+  `reviewedAt` DATETIME(3) NULL,
+  `receiptId` VARCHAR(191) NULL,
+  `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `updatedAt` DATETIME(3) NOT NULL,
+  UNIQUE INDEX `StudentPaymentRequest_requestId_key` (`requestId`),
+  UNIQUE INDEX `StudentPaymentRequest_transactionId_key` (`transactionId`),
+  UNIQUE INDEX `StudentPaymentRequest_receiptId_key` (`receiptId`),
+  INDEX `StudentPaymentRequest_studentId_status_idx` (`studentId`,`status`),
+  INDEX `StudentPaymentRequest_status_createdAt_idx` (`status`,`createdAt`),
+  PRIMARY KEY (`id`),
+  CONSTRAINT `StudentPaymentRequest_studentId_fkey` FOREIGN KEY (`studentId`) REFERENCES `Student` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `StudentPaymentRequest_reviewerId_fkey` FOREIGN KEY (`reviewerId`) REFERENCES `User` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `StudentPaymentRequest_receiptId_fkey` FOREIGN KEY (`receiptId`) REFERENCES `FeeTransaction` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

@@ -14,3 +14,12 @@ export function resolveAppOrigin(env: Record<string, string | undefined>) {
  if (production && url.protocol !== 'https:') throw new Error('APP_ORIGIN must use HTTPS in production.');
  return url.origin;
 }
+
+export function collegeDate(now = new Date()) {
+ const parts = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(now);
+ const value = (type: string) => parts.find(part => part.type === type)!.value;
+ return `${value('year')}-${value('month')}-${value('day')}`;
+}
+export function isPastOrTodayDate(value: Date, now = new Date()) {
+ return value.toISOString().slice(0,10) <= collegeDate(now);
+}
