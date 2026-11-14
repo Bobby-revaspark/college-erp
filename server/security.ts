@@ -8,8 +8,8 @@ export function attendancePercentage(statuses: string[]) { return statuses.lengt
 
 export function resolveAppOrigin(env: Record<string, string | undefined>) {
  const production = env.NODE_ENV === 'production';
- const configured = env.APP_ORIGIN || (env.RAILWAY_PUBLIC_DOMAIN ? `https://${env.RAILWAY_PUBLIC_DOMAIN}` : undefined);
- if (production && !configured) throw new Error('Set APP_ORIGIN to the public HTTPS URL (or configure a Railway public domain).');
+ const configured = env.APP_ORIGIN || (env.VERCEL_URL ? `https://${env.VERCEL_URL}` : undefined) || (env.RAILWAY_PUBLIC_DOMAIN ? `https://${env.RAILWAY_PUBLIC_DOMAIN}` : undefined);
+ if (production && !configured) throw new Error('Set APP_ORIGIN to the public HTTPS URL (or configure a Vercel/Railway public domain).');
  const url = new URL(configured || 'http://localhost:5173');
  if (production && url.protocol !== 'https:') throw new Error('APP_ORIGIN must use HTTPS in production.');
  return url.origin;

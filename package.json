@@ -13,7 +13,9 @@
     "test": "tsx --test tests/*.test.ts",
     "test:integration": "tsx tests/api.integration.ts",
     "db:migrate": "prisma migrate deploy",
-    "db:admin": "tsx prisma/admin.ts"
+    "db:admin": "tsx prisma/admin.ts",
+    "vercel-build": "node scripts/vercel-build.mjs",
+    "build:static": "node scripts/build-static.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
