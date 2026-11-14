@@ -14,6 +14,8 @@ npm run build:static
 npx vite preview
 ```
 
+Static-mode verification: build succeeded even with an inherited `VITE_DEMO_MODE=false`; bundled sample data and absence of an active API entry were checked. Local browser preview showed ten students, fee records, department/attendance analytics and timetable without a database. All nine policy/routing tests and full TypeScript checks pass.
+
 The backend and MySQL source remain available for a future live installation. The full-stack instructions below apply only after explicitly enabling that mode.
 
 React 19 + TypeScript + Tailwind CSS, Recharts, Express 5, and Prisma/MySQL 8. The browser UI includes a clearly marked, persistent demo workspace; the API always requires real authentication. The two modes do not share data.
