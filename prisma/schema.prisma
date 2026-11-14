@@ -1,0 +1,149 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "mysql"
+  url = env("DATABASE_URL")
+}
+enum Role {
+  ADMIN
+  ACCOUNTANT
+  FACULTY
+  STUDENT
+}
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+}
+enum PaymentMode {
+  CASH
+  UPI
+  BANK_TRANSFER
+  CARD
+}
+model User {
+  id String @id @default(cuid())
+  name String
+  email String @unique
+  passwordHash String
+  role Role
+  active Boolean @default(true)
+  student Student?
+  lectures Timetable[]
+  sessions Session[]
+  payments FeeTransaction[]
+  createdAt DateTime @default(now())
+}
+model Session {
+  id String @id
+  userId String
+  user User @relation(fields:[userId], references:[id], onDelete:Cascade)
+  expiresAt DateTime
+  @@index([expiresAt])
+}
+model Department {
+  id String @id @default(cuid())
+  name String @unique
+  code String @unique
+  courses Course[]
+  students Student[]
+}
+model Course {
+  id String @id @default(cuid())
+  name String
+  departmentId String
+  department Department @relation(fields:[departmentId], references:[id])
+  students Student[]
+  feeStructures FeeStructure[]
+  subjects Subject[]
+  timetables Timetable[]
+  @@unique([departmentId,name])
+}
+model Student {
+  id String @id @default(cuid())
+  userId String @unique
+  user User @relation(fields:[userId], references:[id])
+  enrollment String @unique
+  name String
+  email String @unique
+  phone String
+  dob DateTime
+  gender String
+  photo String? @db.MediumText
+  address String @db.Text
+  guardianName String
+  guardianPhone String
+  departmentId String
+  department Department @relation(fields:[departmentId], references:[id])
+  courseId String
+  course Course @relation(fields:[courseId], references:[id])
+  semester Int
+  batch String
+  admissionDate DateTime
+  active Boolean @default(true)
+  totalFee Decimal @db.Decimal(12,2)
+  transactions FeeTransaction[]
+  attendance Attendance[]
+  @@index([courseId,semester])
+}
+model FeeStructure {
+  id String @id @default(cuid())
+  courseId String
+  course Course @relation(fields:[courseId], references:[id])
+  semester Int
+  tuition Decimal @db.Decimal(12,2)
+  exam Decimal @db.Decimal(12,2)
+  library Decimal @db.Decimal(12,2)
+  lab Decimal @db.Decimal(12,2)
+  @@unique([courseId,semester])
+}
+model FeeTransaction {
+  id String @id @default(cuid())
+  receiptNumber String @unique
+  studentId String
+  student Student @relation(fields:[studentId], references:[id])
+  amount Decimal @db.Decimal(12,2)
+  mode PaymentMode
+  transactionId String? @unique
+  date DateTime
+  recordedById String
+  recordedBy User @relation(fields:[recordedById], references:[id])
+  createdAt DateTime @default(now())
+  @@index([date])
+}
+model Subject {
+  id String @id @default(cuid())
+  name String
+  code String @unique
+  courseId String
+  course Course @relation(fields:[courseId], references:[id])
+  semester Int
+  attendance Attendance[]
+  timetables Timetable[]
+}
+model Attendance {
+  id String @id @default(cuid())
+  studentId String
+  student Student @relation(fields:[studentId], references:[id])
+  subjectId String
+  subject Subject @relation(fields:[subjectId], references:[id])
+  date DateTime @db.Date
+  status AttendanceStatus
+  @@unique([studentId,subjectId,date])
+}
+model Timetable {
+  id String @id @default(cuid())
+  courseId String
+  course Course @relation(fields:[courseId], references:[id])
+  semester Int
+  subjectId String
+  subject Subject @relation(fields:[subjectId], references:[id])
+  facultyId String
+  faculty User @relation(fields:[facultyId], references:[id])
+  day Int
+  startTime String
+  endTime String
+  room String
+  @@index([day,facultyId])
+}
