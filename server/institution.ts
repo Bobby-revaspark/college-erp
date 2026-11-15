@@ -1,4 +1,4 @@
-import { collegeDate } from './security';
+import { collegeDate } from './security.js';
 export function defaultInstitution() {
  const [year,month] = collegeDate().split('-').map(Number);
  const start = month >= 7 ? year : year - 1;

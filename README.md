@@ -177,3 +177,7 @@ Integration suites use temporary student/payment/staff/subject fixtures and clea
 When the private `.env.aiven` file is present, `npm run dev` starts the API in Docker with verified Aiven TLS and opens Vite at `http://localhost:5173` in live mode. Start Docker Desktop first. The first run builds the API image. Sign in with your real admin account; the demo role selector is unavailable. New registrations persist in Aiven. Run `npm run dev:stop` to stop the local API. Never share `.env.aiven` or commit credentials.
 
 On Vercel, set `VITE_DEMO_MODE=false` in the deploying project's environment variables and redeploy. Changing environment variables does not update an already built frontend.
+
+### Vercel ESM module loading
+
+Backend relative imports use explicit `.js` extensions so the compiled server works with native Node ESM. `tsconfig.server.json` checks NodeNext module resolution; `npm run test:server-build` compiles and imports the actual API entry with plain Node, without `tsx` or database access. If deploying from another repository, copy the updated `api/`, `server/`, `scripts/`, `package.json` and `tsconfig.server.json` together, then redeploy.

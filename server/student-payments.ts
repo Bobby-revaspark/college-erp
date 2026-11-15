@@ -2,7 +2,7 @@ import type {Express,Request} from 'express';
 import {PrismaClient,Prisma,type User} from '@prisma/client';
 import {randomUUID} from 'node:crypto';
 import {z} from 'zod';
-import {isPastOrTodayDate} from './security';
+import {isPastOrTodayDate} from './security.js';
 type AuthRequest=Request&{user?:User};
 export const paymentRequestSelect={id:true,requestId:true,studentId:true,amount:true,mode:true,transactionId:true,date:true,studentNote:true,hasProof:true,status:true,reviewerId:true,reviewNote:true,reviewedAt:true,receiptId:true,createdAt:true,updatedAt:true,student:{select:{name:true,enrollment:true}},receipt:{select:{id:true,receiptNumber:true}}} as const;
 const formatted=(r:any)=>({...r,amount:Number(r.amount)});

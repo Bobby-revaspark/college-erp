@@ -1,6 +1,6 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
-import app from './app';
-import { apiRequestUrl } from './vercel-routing';
+import app from './app.js';
+import { apiRequestUrl } from './vercel-routing.js';
 
 // Vercel rewrites retain route captures as query parameters. Restore the Express
 // URL explicitly so the same /api routes work in Node and in the function.
