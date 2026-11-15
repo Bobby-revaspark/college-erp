@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "concurrently -k \"vite --host 0.0.0.0\" \"tsx watch server/index.ts\"",
+    "dev": "node scripts/dev.mjs",
     "build": "tsc --noEmit && vite build",
     "start": "NODE_ENV=production tsx server/index.ts",
     "db:generate": "prisma generate",
@@ -17,7 +17,8 @@
     "vercel-build": "node scripts/vercel-build.mjs",
     "build:static": "node scripts/build-static.mjs",
     "db:check": "node --import tsx scripts/check-database.ts",
-    "test:student-payments": "node --import tsx tests/student-payments.integration.ts"
+    "test:student-payments": "node --import tsx tests/student-payments.integration.ts",
+    "dev:stop": "docker compose -f deployment/dev-aiven.compose.yml down"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

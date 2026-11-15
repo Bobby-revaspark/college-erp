@@ -11,7 +11,7 @@ import { CollegeLogo, InstitutionForm, defaultInstitution, type Institution } fr
 import { FeeStatement, PaymentWorkflow, transactionWithBalance } from './fees';
 import { downloadReceipt, ReceiptPreview } from './receipts';
 import {StudentPaymentPanel,PaymentSubmissionInbox} from './student-payments';
-const DEMO = import.meta.env.VITE_DEMO_MODE !== 'false';
+const DEMO = import.meta.env.VITE_DEMO_MODE === 'true';
 const money = (v: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(v || 0);
 const initials = (s: string) => s.split(' ').map(x => x[0]).slice(0, 2).join('');
 const roleName: Record<Role, string> = { ADMIN: 'Super Admin', ACCOUNTANT: 'Accountant', FACULTY: 'Faculty', STUDENT: 'Student' };
@@ -160,7 +160,7 @@ export default function App() {
             await refresh();
         }
         setModal(null);
-        notify('Saved successfully');
+        notify(DEMO ? 'Saved in this browser only — demo mode' : 'Saved to college database');
         return result;
     }
     catch (e) {
@@ -247,7 +247,7 @@ export default function App() {
     if (!DEMO && loading && !user)
         return <div className="session-loading"><CollegeLogo institution={institution}/><h2>{institution.name}</h2><p>Restoring your secure workspace…</p></div>;
     if (!DEMO && !user)
-        return <div className="login-page"><div className="login-brand"><CollegeLogo institution={institution}/><div className="login-college-name">{institution.name}</div><h1>One campus.<br />Every possibility.</h1><p>Your connected workspace for better college operations.</p></div><form className="login-card" onSubmit={async (e) => { e.preventDefault(); const f = new FormData(e.currentTarget); setLoading(true); setError(''); try {
+        return <div className="login-page"><div className="login-brand"><span className="login-eyebrow">COLLEGE ERP PORTAL</span><h1>One campus.<br />Every possibility.</h1><p>Your connected workspace for better college operations.</p></div><form className="login-card" onSubmit={async (e) => { e.preventDefault(); const f = new FormData(e.currentTarget); setLoading(true); setError(''); try {
             const r = await api('/auth/login', { email: f.get('email'), password: f.get('password') });
             setUser(r.user);
             setRole(r.user.role);
@@ -261,7 +261,7 @@ export default function App() {
         }
         finally {
             setLoading(false);
-        } }}><div className="login-college-heading"><CollegeLogo institution={institution}/><div><b>{institution.name}</b><small>College ERP Portal</small></div></div><h2>Welcome back</h2><p className="muted">Sign in to your college workspace.</p><label>Email address<input name="email" type="email" required autoComplete="username"/></label><label>Password<input name="password" type="password" required minLength={8} autoComplete="current-password"/></label>{error && <p className="error">{error}</p>}<Button type="submit" disabled={loading}>{loading ? 'Signing in…' : 'Sign in'} <ArrowRight size={16}/></Button><small>Contact your college administrator for access.</small></form></div>;
+        } }}><div className="login-college-heading"><CollegeLogo institution={institution}/></div><h2>Welcome back</h2><p className="muted">Sign in to your college workspace.</p><label>Email address<input name="email" type="email" required autoComplete="username" placeholder="Enter your email address"/></label><label>Password<input name="password" type="password" required minLength={8} autoComplete="current-password" placeholder="Enter your password"/></label>{error && <p className="error" role="alert">{error}</p>}<Button type="submit" disabled={loading}>{loading ? 'Signing in…' : 'Sign in'} <ArrowRight size={16}/></Button><small>Contact your college administrator for access.</small></form></div>;
     return <div className={'app-shell ' + (collapsed ? 'sidebar-collapsed' : '')}><aside className={'sidebar ' + (mobile ? 'open' : '')}><div className="brand"><button className="mobile-close icon-btn" onClick={() => setMobile(false)} aria-label="Close menu"><X /></button></div><p className="nav-label">WORKSPACE</p><nav>{nav.filter(n => n.roles.includes(role)).map(n => <button key={n.id} title={n.label} aria-label={n.label} className={page === n.id ? 'active' : ''} onClick={() => { setPage(n.id); setDept(''); setSemester(''); setFeeStatus(''); setSubject(''); setMarks({}); if (n.id === 'attendance' && role === 'STUDENT')
         setProfileTab('Attendance'); if (n.id === 'profile')
         setProfileTab('Overview'); setSearch(''); setMobile(false); }}><n.icon size={19}/><span className="nav-text">{n.label}</span>{n.id === 'students' && <span>{data.students.length}</span>}</button>)}</nav><div className="sidebar-bottom"><div className="help-card"><span className="help-icon"><HelpCircle size={21}/></span><b>A little help goes a long way</b><p>Everything you need to make campus life simpler.</p><button onClick={() => setModal('help')}>Visit help center <ArrowUpRight size={15}/></button></div><div className="sidebar-user"><span className="avatar">{initials(user?.name || 'Alex Morgan')}</span><div><b>{user?.name}</b><small>{roleName[role]}</small></div>{!DEMO && <button className="icon-btn" aria-label="Log out" onClick={async () => { try {

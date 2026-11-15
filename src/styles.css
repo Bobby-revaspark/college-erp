@@ -39,3 +39,12 @@ table{font-size:12px}thead{font-size:11px}.person b{font-size:12px}.page-heading
 .sidebar-collapsed .brand .college-banner{width:52px;height:auto;}
 @media(max-width:768px){.college-header-brand .college-logo.college-banner{width:180px;height:auto;}.brand .college-logo.college-banner{max-width:190px;}}
 @media(max-width:400px){.college-header-brand .college-logo.college-banner{width:145px;}}
+
+/* A single full college wordmark anchors the login form on every screen. */
+.login-page .login-card{width:420px;max-width:calc(100% - 40px);padding:40px 0;}
+.login-page .login-college-heading{display:flex;align-items:center;justify-content:center;margin:0 0 38px;padding:16px;background:#fff;border:1px solid #e1e7dc;border-radius:12px;}
+.login-page .login-college-heading .college-logo.college-banner{display:block;width:100%;max-width:380px;height:auto;object-fit:contain;border-radius:0;}
+.login-page .login-college-heading .college-logo:not(.college-banner){width:72px;height:72px;}
+.login-eyebrow{font-size:11px;font-weight:600;letter-spacing:2px;color:#b9d0a4;}
+.login-card input{min-height:46px;}
+@media(max-width:768px){.login-page{grid-template-columns:1fr;}.login-page .login-brand{display:none;}.login-page .login-card{max-width:calc(100% - 36px);padding:32px 0;}.login-page .login-college-heading{margin-bottom:30px;padding:12px;}.login-card h2{font-size:27px;}}

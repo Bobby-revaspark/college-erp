@@ -171,3 +171,9 @@ Integration suites use temporary student/payment/staff/subject fixtures and clea
 - `api/index.ts`, `server/vercel-handler.ts`: serverless adapter and routing.
 - `prisma/`: MySQL schema, committed migrations, seed and initial-admin setup.
 - `tests/`: policy, calendar, receipt and API integration checks.
+
+### Local development with Aiven
+
+When the private `.env.aiven` file is present, `npm run dev` starts the API in Docker with verified Aiven TLS and opens Vite at `http://localhost:5173` in live mode. Start Docker Desktop first. The first run builds the API image. Sign in with your real admin account; the demo role selector is unavailable. New registrations persist in Aiven. Run `npm run dev:stop` to stop the local API. Never share `.env.aiven` or commit credentials.
+
+On Vercel, set `VITE_DEMO_MODE=false` in the deploying project's environment variables and redeploy. Changing environment variables does not update an already built frontend.

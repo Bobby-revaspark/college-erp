@@ -1,0 +1,17 @@
+services:
+  api:
+    image: campus-erp:aiven-dev
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    env_file:
+      - ../.env.aiven
+    environment:
+      NODE_ENV: development
+      APP_ORIGIN: http://localhost:5173
+      PORT: '3001'
+    ports:
+      - '127.0.0.1:3301:3001'
+    volumes:
+      - ../server:/app/server:ro
+    command: ['node', '--import', 'tsx', 'server/index.ts']
