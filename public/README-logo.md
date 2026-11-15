@@ -1,8 +1,5 @@
 # College logo
 
-You can add your own logo in either of two ways:
+`college-logo.png` is the original supplied Gandhi P.R. College banner. The portal displays the complete banner without cropping, preserving its original aspect ratio.
 
-1. Sign in as an administrator, open **Administration → College identity**, and upload a PNG, JPG or WebP image (up to 350 KB). Save college settings. The header, footer, login screen and new receipt downloads update immediately.
-2. Add your file to this folder as `college-logo.png`, publish the application, then set the logo path to `/college-logo.png` in College identity.
-
-No logo is bundled. Until you provide one, the portal displays a graduation-cap placeholder. A missing file also falls back to this icon. Use **Use placeholder** in settings to remove an uploaded logo.
+To replace it, upload a PNG, JPG or WebP (up to 350 KB) in **Administration → College identity**. Uploaded images display in full. Save college settings to update the header, sidebar, footer, login screen and receipts.

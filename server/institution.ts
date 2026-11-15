@@ -3,7 +3,7 @@ export function defaultInstitution() {
  const [year,month] = collegeDate().split('-').map(Number);
  const start = month >= 7 ? year : year - 1;
  return {
-  id: 'college', name: 'Greenfield College', address: '', email: '', phone: '', website: '',
+  id: 'college', name: 'Gandhi P.R. College', address: '', email: '', phone: '', website: '',
   logoUrl: '/college-logo.png', academicYear: `${start}–${String(start + 1).slice(-2)}`,
   receiptNote: 'This receipt confirms a recorded payment. Please retain it for your records.',
   paymentUpiId: '', paymentBankDetails: '', paymentInstructions: '', paymentQrUrl: '',

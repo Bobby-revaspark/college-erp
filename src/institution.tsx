@@ -14,11 +14,11 @@ export type Institution = {
     receiptNote: string; paymentUpiId?:string;paymentBankDetails?:string;paymentInstructions?:string;paymentQrUrl?:string|null;
 };
 export { academicYear } from './lib/calendar';
-export const defaultInstitution = (): Institution => ({ id: 'college', name: 'Greenfield College', address: '', email: '', phone: '', website: '', logoUrl: '', academicYear: academicYear(), receiptNote: 'Thank you. Please retain this receipt for your records.',paymentUpiId:'',paymentBankDetails:'',paymentInstructions:'',paymentQrUrl:'' });
+export const defaultInstitution = (): Institution => ({ id: 'college', name: 'Gandhi P.R. College', address: '', email: '', phone: '', website: '', logoUrl: '/college-logo.png', academicYear: academicYear(), receiptNote: 'Thank you. Please retain this receipt for your records.',paymentUpiId:'',paymentBankDetails:'',paymentInstructions:'',paymentQrUrl:'' });
 export function CollegeLogo({ institution, className = '' }: {
     institution: Institution;
     className?: string;
-}) { const [broken, setBroken] = useState(false); useEffect(() => setBroken(false), [institution.logoUrl]); return institution.logoUrl && !broken ? <img src={institution.logoUrl} className={'college-logo ' + className} alt={institution.name + ' logo'} onError={() => setBroken(true)}/> : <span className={'college-logo logo-fallback ' + className} aria-label="College logo placeholder"><GraduationCap aria-hidden="true" size={25}/></span>; }
+}) { const [broken, setBroken] = useState(false); useEffect(() => setBroken(false), [institution.logoUrl]); return institution.logoUrl && !broken ? <img src={institution.logoUrl} className={'college-logo ' + (institution.logoUrl === '/college-logo.png' ? 'college-banner ' : '') + className} alt={institution.name + ' logo'} onError={() => setBroken(true)}/> : <span className={'college-logo logo-fallback ' + className} aria-label="College logo placeholder"><GraduationCap aria-hidden="true" size={25}/></span>; }
 export function InstitutionForm({ institution, onSave, saving }: {
     institution: Institution;
     onSave: (settings: Institution) => Promise<boolean>;

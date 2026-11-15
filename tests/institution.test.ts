@@ -2,7 +2,7 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {defaultInstitution,paymentReceiptBalances} from '../server/institution';
 test('institution fallback exposes branding without private configuration',()=>{
- const settings=defaultInstitution();assert.equal(settings.id,'college');assert.equal(settings.logoUrl,'/college-logo.png');assert.match(settings.academicYear,/^\d{4}–\d{2}$/);assert.equal(settings.name,'Greenfield College');
+ const settings=defaultInstitution();assert.equal(settings.id,'college');assert.equal(settings.logoUrl,'/college-logo.png');assert.match(settings.academicYear,/^\d{4}–\d{2}$/);assert.equal(settings.name,'Gandhi P.R. College');
 });
 test('old receipts derive their historical balance and preserve recorded snapshots',()=>{
  const date=new Date('2026-01-01');

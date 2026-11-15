@@ -20,7 +20,7 @@ async function logoForPdf(url: string) { if (!url)
     const ctx = canvas.getContext('2d');
     if (!ctx)
         return resolve(null);
-    ctx.drawImage(image, 0, 0);
+    ctx.drawImage(image, 0, 0, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height);
     resolve(canvas.toDataURL('image/png'));
 }
 catch {

@@ -35,7 +35,7 @@ Sign in as Admin and open **Administration → College identity**:
 - Alternative logo path: add `public/college-logo.png`, publish, then set the logo path to `/college-logo.png`.
 - Add your genuine UPI ID, bank instructions and payment QR image. Removing the payment QR restores the explicitly labelled demo placeholder.
 
-Missing logos fall back to a graduation-cap icon. No genuine logo or payment destination is bundled. The default editable college name is Greenfield College. See [public/README-logo.md](public/README-logo.md).
+Missing logos fall back to a graduation-cap icon. No genuine logo or payment destination is bundled. The default editable college name is Gandhi P.R. College. See [public/README-logo.md](public/README-logo.md).
 
 ## Requirements
 
